@@ -18,7 +18,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private boolean [] storage;
-    private WeightedQuickUnionUF qu;
+    public WeightedQuickUnionUF qu;
     private int gridSize;
     private int totalSites;
 
@@ -88,10 +88,10 @@ public class Percolation {
         // A full site is an open site that can be connected to an open site in the top row
         // via a chain of neighboring (left, right, up, down) open sites.
 
-        return isOpen(row, col) && (  isOpen( row - 1, col ) ||
-                                      isOpen( row, col + 1 ) ||
-                                      isOpen( row + 1, col ) ||
-                                      isOpen( row, col - 1 ) );
+        return isOpen(row, col) && (  isInLimits(row - 1, col) && isOpen( row - 1, col ) ||
+                                      isInLimits(row, col + 1) && isOpen( row, col + 1 ) ||
+                                      isInLimits(row + 1, col) && isOpen( row + 1, col ) ||
+                                      isInLimits(row, col - 1) && isOpen( row, col - 1 ) );
 
     }
 
@@ -112,7 +112,7 @@ public class Percolation {
 
     }
 
-    private int xyTo1D(int row, int col) {
+    public int xyTo1D(int row, int col) {
 
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
@@ -122,22 +122,21 @@ public class Percolation {
 
     private boolean isInLimits(int row, int col) {
 
-        return ((row <= 0 || row > gridSize) || (col <= 0 || col > gridSize));
+        return !((row <= 0 || row > gridSize) || (col <= 0 || col > gridSize));
     }
 
     public static void main(String[] args) {
 
+        // Test the open() method and the Percolation() constructor.
+        // Percolation testP = new Percolation(3);
+        // testP.open(1,1);
+        // testP.open(1,2);
+        // System.out.println(testP.qu.connected(1,2));
 
+        // TODO: Fix input1.txt, input2-no.png
+        // TODO: We should make the first site to be full when it is opened.
+
+        // TODO 3: Check style and findbugs on commandline.
         //Percolation test = new Percolation(5);
-
-        //test
-
-        // Define grid
-        // open some sites
-
-        // open(1, 1) and open(1, 2), and then to ensure that the two corresponding
-        // entries are connected (using .connected() in WeightedQuickUnionUF).
-
-
     }
 }
