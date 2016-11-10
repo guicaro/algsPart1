@@ -48,7 +48,7 @@ public class Percolation {
         // Connect the bottom virtual site to last row
         for ( int x = 1; x <= gridSize; x++)
             qu.union(totalSites - 1, xyTo1D( x, gridSize) );
-        
+
     }
 
     // open site (row, col) if it is not open already
@@ -59,13 +59,13 @@ public class Percolation {
 
         storage [ xyTo1D(row,col) ] = true;
 
-        if ( isInLimits(row-1, col) && storage[ xyTo1D(row-1,col) ] == true)  //north
-            qu.union(xyTo1D(row, col), xyTo1D(row-1, col));
-        if ( isInLimits(row, col+1) && storage[ xyTo1D(row, col+1)] == true)  //east
+        if ( isInLimits(row-1, col) && isOpen(row - 1, col ))  //north
+            qu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
+        if ( isInLimits(row, col+1) && isOpen(row, col + 1 ))  //east
             qu.union(xyTo1D(row, col), xyTo1D(row, col+1));
-        if ( isInLimits(row+1, col) && storage[ xyTo1D(row+1, col)] == true)  //south
+        if ( isInLimits(row+1, col) && isOpen( row + 1, col))  //south
             qu.union(xyTo1D(row, col), xyTo1D(row+1, col));
-        if ( isInLimits(row, col-1) && storage[ xyTo1D(row, col-1)] == true)  //west
+        if ( isInLimits(row, col-1) && isOpen( row, col - 1))   //west
             qu.union(xyTo1D(row, col), xyTo1D(row, col-1));
 
     }
@@ -85,20 +85,31 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        //TODO
-        //qu.connected(xyTo1D(row, col), )???
-        // is it connected
-       // qu.connected()
-        return true;
+        // A full site is an open site that can be connected to an open site in the top row
+        // via a chain of neighboring (left, right, up, down) open sites.
+
+        return isOpen(row, col) && (  isOpen( row - 1, col ) ||
+                                      isOpen( row, col + 1 ) ||
+                                      isOpen( row + 1, col ) ||
+                                      isOpen( row, col - 1 ) );
+
     }
 
     // does the system percolate?
     // if we fill all open sites connected to the top row and that process fills some open site on the bottom row.
+
+    // We say the system percolates
+    // if there is a full site in the bottom row. In other words, a system percolates if we fill
+    // all open sites connected to the top row and that process fills some open site on the bottom row.
     public boolean percolates() {
 
-        //TODO
+        for ( int x = 1; x <= gridSize; x++) {
+            if (isFull(x, gridSize))
+                return true;
+        }
 
-        return true;
+        return false;
+
     }
 
     private int xyTo1D(int row, int col) {
@@ -113,7 +124,6 @@ public class Percolation {
 
         return ((row <= 0 || row > gridSize) || (col <= 0 || col > gridSize));
     }
-
 
     public static void main(String[] args) {
 
