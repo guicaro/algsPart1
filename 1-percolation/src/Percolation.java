@@ -17,9 +17,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    private boolean [][] storage;
+    private boolean [] storage;
     private WeightedQuickUnionUF qu;
-    private int size;
+    private int gridSize;
+    private int totalSites;
 
     // create n-by-n grid, with all sites blocked
     public Percolation(int n) {
@@ -27,16 +28,27 @@ public class Percolation {
         if (n <= 0)
             throw new IllegalArgumentException("size should be greater than 0");
 
-        storage = new boolean [n][n];
-        qu = new WeightedQuickUnionUF(n);
-        size = n;
+        totalSites = n * n + 2;               // Includes 2 virtual sites
+        gridSize = n;
+        storage = new boolean [totalSites];
+        qu = new WeightedQuickUnionUF(totalSites);
 
         // All sites blocked
-        for( int x = 0; x < n; x++) {
-            for( int y = 0; y < n; y++) {
-                storage[x][y] = false;
-            }
+        for( int x = 0; x < totalSites; x++) {
+            storage[x] = false;
         }
+
+        // Connect the virtual sites to first row and last row
+        // They will be connected but not OPEN.
+
+        // Connect the top virtual site to first row
+        for ( int x = 1; x <= gridSize; x++)
+            qu.union(0, xyTo1D( x, 1));
+
+        // Connect the bottom virtual site to last row
+        for ( int x = 1; x <= gridSize; x++)
+            qu.union(totalSites - 1, xyTo1D( x, gridSize) );
+        
     }
 
     // open site (row, col) if it is not open already
@@ -45,15 +57,15 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        storage[row][col] = true;
+        storage [ xyTo1D(row,col) ] = true;
 
-        if ( isInLimits(row-1, col) && storage[row-1][col] == true)  //north
+        if ( isInLimits(row-1, col) && storage[ xyTo1D(row-1,col) ] == true)  //north
             qu.union(xyTo1D(row, col), xyTo1D(row-1, col));
-        if ( isInLimits(row, col+1) && storage[row][col+1] == true)  //east
+        if ( isInLimits(row, col+1) && storage[ xyTo1D(row, col+1)] == true)  //east
             qu.union(xyTo1D(row, col), xyTo1D(row, col+1));
-        if ( isInLimits(row+1, col) &&storage[row+1][col] == true)  //south
+        if ( isInLimits(row+1, col) && storage[ xyTo1D(row+1, col)] == true)  //south
             qu.union(xyTo1D(row, col), xyTo1D(row+1, col));
-        if ( isInLimits(row, col-1) &&storage[row][col-1] == true)  //west
+        if ( isInLimits(row, col-1) && storage[ xyTo1D(row, col-1)] == true)  //west
             qu.union(xyTo1D(row, col), xyTo1D(row, col-1));
 
     }
@@ -64,7 +76,7 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        return storage[row][col] == true;
+        return storage[ xyTo1D(row, col) ] == true;
     }
 
     // is site (row, col) full?
@@ -94,12 +106,12 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        return Integer.valueOf(String.valueOf(row) + String.valueOf(col));
+        return ((gridSize * row) + col) - gridSize ;
     }
 
     private boolean isInLimits(int row, int col) {
 
-        return ((row <= 0 || row > size) || (col <= 0  || col > size));
+        return ((row <= 0 || row > gridSize) || (col <= 0 || col > gridSize));
     }
 
 
