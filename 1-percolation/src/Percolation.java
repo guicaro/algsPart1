@@ -57,11 +57,11 @@ public class Percolation {
         if (isInLimits(row-1, col) && isOpen(row - 1, col))  // north
             qu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
         if (isInLimits(row, col+1) && isOpen(row, col + 1))  // east
-            qu.union(xyTo1D(row, col), xyTo1D(row, col+1));
+            qu.union(xyTo1D(row, col), xyTo1D(row, col + 1));
         if (isInLimits(row+1, col) && isOpen(row + 1, col))  // south
-            qu.union(xyTo1D(row, col), xyTo1D(row+1, col));
+            qu.union(xyTo1D(row, col), xyTo1D(row + 1, col));
         if (isInLimits(row, col-1) && isOpen(row, col - 1))   // west
-            qu.union(xyTo1D(row, col), xyTo1D(row, col-1));
+            qu.union(xyTo1D(row, col), xyTo1D(row, col - 1));
 
     }
 
