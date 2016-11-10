@@ -18,7 +18,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private boolean [] storage;
-    public WeightedQuickUnionUF qu;
+    private WeightedQuickUnionUF qu;
     private int gridSize;
     private int totalSites;
 
@@ -34,7 +34,7 @@ public class Percolation {
         qu = new WeightedQuickUnionUF(totalSites);
 
         // All sites blocked
-        for( int x = 0; x < totalSites; x++) {
+        for (int x = 0; x < totalSites; x++) {
             storage[x] = false;
         }
 
@@ -42,12 +42,12 @@ public class Percolation {
         // They will be connected but not OPEN.
 
         // Connect the top virtual site to first row
-        for ( int x = 1; x <= gridSize; x++)
-            qu.union(0, xyTo1D( x, 1));
+        for (int x = 1; x <= gridSize; x++)
+            qu.union(0, xyTo1D(x, 1));
 
         // Connect the bottom virtual site to last row
-        for ( int x = 1; x <= gridSize; x++)
-            qu.union(totalSites - 1, xyTo1D( x, gridSize) );
+        for (int x = 1; x <= gridSize; x++)
+            qu.union(totalSites - 1, xyTo1D(x, gridSize));
 
     }
 
@@ -57,15 +57,15 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        storage [ xyTo1D(row,col) ] = true;
+        storage [ xyTo1D(row, col) ] = true;
 
-        if ( isInLimits(row-1, col) && isOpen(row - 1, col ))  //north
+        if (isInLimits(row-1, col) && isOpen(row - 1, col))  // north
             qu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
-        if ( isInLimits(row, col+1) && isOpen(row, col + 1 ))  //east
+        if (isInLimits(row, col+1) && isOpen(row, col + 1))  // east
             qu.union(xyTo1D(row, col), xyTo1D(row, col+1));
-        if ( isInLimits(row+1, col) && isOpen( row + 1, col))  //south
+        if (isInLimits(row+1, col) && isOpen(row + 1, col))  // south
             qu.union(xyTo1D(row, col), xyTo1D(row+1, col));
-        if ( isInLimits(row, col-1) && isOpen( row, col - 1))   //west
+        if (isInLimits(row, col-1) && isOpen(row, col - 1))   // west
             qu.union(xyTo1D(row, col), xyTo1D(row, col-1));
 
     }
@@ -88,10 +88,10 @@ public class Percolation {
         // A full site is an open site that can be connected to an open site in the top row
         // via a chain of neighboring (left, right, up, down) open sites.
 
-        return isOpen(row, col) && (  isInLimits(row - 1, col) && isOpen( row - 1, col ) ||
-                                      isInLimits(row, col + 1) && isOpen( row, col + 1 ) ||
-                                      isInLimits(row + 1, col) && isOpen( row + 1, col ) ||
-                                      isInLimits(row, col - 1) && isOpen( row, col - 1 ) );
+        return isOpen(row, col) && (isInLimits(row - 1, col) && isOpen(row - 1, col) ||
+                                      isInLimits(row, col + 1) && isOpen(row, col + 1) ||
+                                      isInLimits(row + 1, col) && isOpen(row + 1, col) ||
+                                      isInLimits(row, col - 1) && isOpen(row, col - 1));
 
     }
 
@@ -103,7 +103,7 @@ public class Percolation {
     // all open sites connected to the top row and that process fills some open site on the bottom row.
     public boolean percolates() {
 
-        for ( int x = 1; x <= gridSize; x++) {
+        for (int x = 1; x <= gridSize; x++) {
             if (isFull(x, gridSize))
                 return true;
         }
@@ -117,7 +117,7 @@ public class Percolation {
         if (!isInLimits(row, col))
             throw new IndexOutOfBoundsException("row index i out of bounds");
 
-        return ((gridSize * row) + col) - gridSize ;
+        return ((gridSize * row) + col) - gridSize;
     }
 
     private boolean isInLimits(int row, int col) {
@@ -135,8 +135,6 @@ public class Percolation {
 
         // TODO: Fix input1.txt, input2-no.png
         // TODO: We should make the first site to be full when it is opened.
-
-        // TODO 3: Check style and findbugs on commandline.
-        //Percolation test = new Percolation(5);
+        // Percolation test = new Percolation(5);
     }
 }
