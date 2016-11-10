@@ -33,11 +33,6 @@ public class Percolation {
         storage = new boolean [totalSites];
         qu = new WeightedQuickUnionUF(totalSites);
 
-        // All sites blocked
-        for (int x = 0; x < totalSites; x++) {
-            storage[x] = false;
-        }
-
         // Connect the virtual sites to first row and last row
         // They will be connected but not OPEN.
 
@@ -88,10 +83,10 @@ public class Percolation {
         // A full site is an open site that can be connected to an open site in the top row
         // via a chain of neighboring (left, right, up, down) open sites.
 
-        return isOpen(row, col) && (isInLimits(row - 1, col) && isOpen(row - 1, col) ||
+        return isOpen(row, col) && (row == 1 || (isInLimits(row - 1, col) && isOpen(row - 1, col) ||
                                       isInLimits(row, col + 1) && isOpen(row, col + 1) ||
                                       isInLimits(row + 1, col) && isOpen(row + 1, col) ||
-                                      isInLimits(row, col - 1) && isOpen(row, col - 1));
+                                      isInLimits(row, col - 1) && isOpen(row, col - 1)));
 
     }
 
@@ -133,7 +128,7 @@ public class Percolation {
         // testP.open(1,2);
         // System.out.println(testP.qu.connected(1,2));
 
-        // TODO: Fix input1.txt, input2-no.png
+        // TODO: Fix, seems we are setting other sites to FULL, maybe we should not connect them
         // TODO: We should make the first site to be full when it is opened.
         // Percolation test = new Percolation(5);
     }
